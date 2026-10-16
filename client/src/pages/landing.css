@@ -232,6 +232,7 @@
 .landing__footer {
   margin-top: auto;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
@@ -239,6 +240,21 @@
   border-top: 1px solid var(--border);
   font-size: 13px;
   color: var(--text-muted);
+}
+
+.landing__footer-links {
+  display: flex;
+  gap: 16px;
+}
+
+.landing__footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.landing__footer-links a:hover {
+  color: var(--text);
+  text-decoration: underline;
 }
 
 .landing__footer-note {

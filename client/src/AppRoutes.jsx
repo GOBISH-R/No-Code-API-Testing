@@ -5,6 +5,8 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignupPage from './pages/SignupPage.jsx';
 import VerifyEmailPage from './pages/VerifyEmailPage.jsx';
 import ResetConfirmPage from './pages/ResetConfirmPage.jsx';
+import PrivacyPage from './pages/PrivacyPage.jsx';
+import TermsPage from './pages/TermsPage.jsx';
 import WelcomePage from './pages/WelcomePage.jsx';
 import RequireAuth from './components/common/RequireAuth.jsx';
 
@@ -35,6 +37,9 @@ export default function AppRoutes() {
           sign-in page; the old reset pages now lead there. */}
       <Route path="/reset-confirm" element={<ResetConfirmPage />} />
       <Route path="/forgot-password" element={<Navigate to="/login" replace />} />
+      {/* Public, and linked from Google's sign-in consent screen. */}
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
       <Route path="/reset-password" element={<Navigate to="/login" replace />} />
 
       <Route

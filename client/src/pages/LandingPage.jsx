@@ -112,6 +112,10 @@ export default function LandingPage() {
           <BrandMark size={18} />
           ApIForge
         </span>
+        <nav className="landing__footer-links" aria-label="Legal">
+          <Link to="/privacy">Privacy Policy</Link>
+          <Link to="/terms">Terms of Service</Link>
+        </nav>
         <span className="landing__footer-note">REST · GraphQL · WebSocket</span>
       </footer>
     </div>

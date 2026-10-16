@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { setMailTransport } from './mailer.js';
+import { buildGmailTransport, isGmailApiConfigured } from './gmailTransport.js';
 
 /**
  * The real mail transport.
@@ -12,7 +13,7 @@ import { setMailTransport } from './mailer.js';
  */
 
 export function isMailConfigured(env = process.env) {
-  return Boolean(env.SMTP_URL?.trim() && env.MAIL_FROM?.trim());
+  return isGmailApiConfigured(env) || Boolean(env.SMTP_URL?.trim() && env.MAIL_FROM?.trim());
 }
 
 /**
@@ -78,8 +79,8 @@ export async function installMailTransport(env = process.env, { createTransport 
       // Unreachable in practice — checkConfig refuses to start first — but a second
       // line of defence costs nothing and this is the failure that hides itself.
       console.error(
-        '[mail] SMTP_URL/MAIL_FROM are not set. Verification and password-reset emails ' +
-          'will NOT be sent.',
+        '[mail] Neither the Gmail API (GMAIL_REFRESH_TOKEN) nor SMTP_URL is set, with MAIL_FROM. ' +
+          'Verification and password-reset emails will NOT be sent.',
       );
     }
     return { installed: false, verified: false };
@@ -92,7 +93,11 @@ export async function installMailTransport(env = process.env, { createTransport 
    * suite that is deliberately offline — left to itself it does a DNS lookup and then
    * waits out the connect timeout, turning two unit tests into a 20-second hang.
    */
-  const transport = (createTransport ?? buildTransport)(env);
+  // The Gmail API when it is set up — it works on hosts that block SMTP (Render's free
+  // plan does) — and SMTP otherwise.
+  const viaGmailApi = !createTransport && isGmailApiConfigured(env);
+  const kind = viaGmailApi ? 'Gmail API' : 'SMTP';
+  const transport = viaGmailApi ? buildGmailTransport(env) : (createTransport ?? buildTransport)(env);
   const from = env.MAIL_FROM.trim();
 
   setMailTransport(({ to, subject, text, html }) =>
@@ -101,11 +106,11 @@ export async function installMailTransport(env = process.env, { createTransport 
 
   try {
     await transport.verify();
-    console.log(`[mail] SMTP ready, sending as ${from}`);
+    console.log(`[mail] ${kind} ready, sending as ${from}`);
     return { installed: true, verified: true };
   } catch (err) {
     console.error(
-      `[mail] SMTP is configured but the connection failed: ${err.message}\n` +
+      `[mail] ${kind} is configured but the connection failed: ${err.message}\n` +
         '[mail] Sign-up confirmation and password reset will fail until this is fixed.',
     );
     return { installed: true, verified: false };

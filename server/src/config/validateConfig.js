@@ -14,7 +14,6 @@ const REQUIRED_IN_PRODUCTION = [
   ['CLIENT_URL', 'the frontend origin allowed by CORS and the WebSocket gateway'],
   ['SESSION_SECRET', 'the key session cookies are signed with'],
   ['MAIL_FROM', 'the address verification and reset emails are sent from'],
-  ['SMTP_URL', 'the mail transport, without which password reset silently fails'],
   ['ENCRYPTION_KEY', 'the key stored API credentials are encrypted with'],
 ];
 
@@ -94,6 +93,19 @@ export function checkConfig(env = process.env) {
     throw new Error(
       'ENCRYPTION_KEY and SESSION_SECRET must be different keys. Reusing one means a ' +
         'leak of either compromises both sessions and stored credentials.',
+    );
+  }
+
+  // A way to send mail: the Gmail API (works where SMTP is blocked) or SMTP. Without
+  // one, sign-up confirmation and password reset silently fail.
+  const hasGmailApi = Boolean(
+    env.GMAIL_REFRESH_TOKEN?.trim() && env.GOOGLE_CLIENT_ID?.trim() && env.GOOGLE_CLIENT_SECRET?.trim(),
+  );
+  if (!hasGmailApi && !env.SMTP_URL?.trim()) {
+    throw new Error(
+      'Missing required production configuration: a mail transport — GMAIL_REFRESH_TOKEN ' +
+        '(with GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET) or SMTP_URL. Without one, sign-up ' +
+        'confirmation and password reset silently fail.',
     );
   }
 

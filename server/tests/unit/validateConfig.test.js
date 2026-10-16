@@ -105,7 +105,21 @@ describe('checkConfig — account authentication secrets', () => {
   it('refuses to start without a mail transport', () => {
     // Password reset that silently goes nowhere is worse than refusing to boot.
     const { SMTP_URL: _omitted, ...env } = full;
-    expect(() => checkConfig(env)).toThrow(/SMTP_URL/);
+    expect(() => checkConfig(env)).toThrow(/mail transport.*GMAIL_REFRESH_TOKEN.*SMTP_URL/);
+  });
+
+  it('accepts the Gmail API instead of SMTP (for hosts that block SMTP)', () => {
+    const { SMTP_URL: _omitted, ...env } = full;
+    const gmail = {
+      ...env,
+      GMAIL_REFRESH_TOKEN: 'refresh-token',
+      GOOGLE_CLIENT_ID: 'id.apps.googleusercontent.com',
+      GOOGLE_CLIENT_SECRET: 'client-secret',
+    };
+    expect(() => checkConfig(gmail)).not.toThrow();
+    // The refresh token alone is not enough: it belongs to a Google client.
+    const { GOOGLE_CLIENT_ID: _id, GOOGLE_CLIENT_SECRET: _secret, ...noClient } = env;
+    expect(() => checkConfig({ ...noClient, GMAIL_REFRESH_TOKEN: 'refresh-token' })).toThrow(/mail transport/);
   });
 
   it('refuses half-configured Google sign-in', () => {

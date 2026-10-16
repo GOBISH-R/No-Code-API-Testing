@@ -1,0 +1,114 @@
+/* The left rail: a fixed-width column that owns its own scrolling. */
+
+.sidebar {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid var(--border);
+  background: var(--bg-subtle);
+}
+
+.sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 36px;
+  padding: 0 8px 0 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar__views {
+  display: flex;
+  align-self: stretch;
+  gap: 2px;
+}
+
+.sidebar__view {
+  position: relative;
+  padding: 0 6px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+}
+
+.sidebar__view:hover:not(:disabled) {
+  background: transparent;
+  color: var(--text);
+}
+
+.sidebar__view--active {
+  color: var(--text);
+}
+
+.sidebar__view--active::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.sidebar__new {
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+/* The tree takes every pixel the header and tool rail do not. */
+.sidebar__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px 0;
+}
+
+.sidebar__error {
+  margin: 8px 12px 0;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 12px;
+}
+
+/* A single quiet row, not a grid of panels. These are occasional destinations; giving
+   them four full-width cells made the bottom of the sidebar louder than the tree. */
+.sidebar__tools {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  height: 30px;
+  padding: 0 6px;
+  border-top: 1px solid var(--border);
+}
+
+.sidebar__tool {
+  flex: 1;
+  min-width: 0;
+  padding: 3px 4px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar__tool:hover:not(:disabled) {
+  background: var(--bg-muted);
+  color: var(--text);
+  border-color: transparent;
+}

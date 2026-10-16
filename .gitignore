@@ -1,0 +1,19 @@
+node_modules/
+dist/
+build/
+
+.env
+# Local development database (npm run dev:local)
+.data/
+.env.local
+*.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/

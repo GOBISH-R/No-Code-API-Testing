@@ -1,0 +1,234 @@
+.report-modal {
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.report-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.report-title {
+  font-size: 1.1rem;
+  margin: 0 0 1.2rem;
+}
+
+.report-section {
+  margin-bottom: 1.6rem;
+}
+
+.report-section h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 0.6rem;
+}
+
+.report-summary {
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.report-summary th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 400;
+  padding: 0.25rem 1rem 0.25rem 0;
+  vertical-align: top;
+}
+
+.report-summary td {
+  padding: 0.25rem 0;
+}
+
+.report-status {
+  font-weight: 700;
+  padding: 0.05rem 0.5rem;
+  border-radius: var(--radius);
+  font-size: 0.78rem;
+}
+
+.report-status--passed {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.report-status--failed {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.report-status--error {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.report-section--failures {
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--danger);
+  background: var(--danger-bg);
+}
+
+.report-failure-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.85rem;
+}
+
+.report-failure-list__request {
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.report-failure-list__reason {
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  margin-left: 1rem;
+}
+
+.report-request {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 0.7rem 0.9rem;
+  margin-bottom: 0.7rem;
+}
+
+.report-request--error {
+  border-color: var(--danger);
+}
+
+.report-request__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.2rem;
+}
+
+.report-request__method {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--accent-strong);
+  font-size: 0.75rem;
+}
+
+.report-request__name {
+  font-weight: 600;
+}
+
+.report-request__url {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  word-break: break-all;
+}
+
+.report-request__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.report-request__status-badge {
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.report-request__error {
+  color: var(--danger);
+  font-size: 0.82rem;
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.report-assertions {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.report-assertions th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 400;
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.report-assertions td {
+  padding: 0.3rem 0.5rem;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.report-assertions tr.pass td:first-child {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.report-assertions tr.fail td:first-child {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.report-assertions td:last-child {
+  color: var(--text-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+@media print {
+  body {
+    visibility: hidden;
+  }
+
+  #report-print-root,
+  #report-print-root * {
+    visibility: visible;
+  }
+
+  #report-print-root {
+    position: absolute;
+    inset: 0;
+    max-height: none;
+    overflow: visible;
+    border: none;
+    box-shadow: none;
+    color: #000;
+    background: #fff;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Iteration provenance on a data-driven run's report. */
+.report-failure-list__iteration {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.report-request__iteration {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 16rem;
+}

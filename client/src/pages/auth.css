@@ -1,0 +1,522 @@
+/**
+ * The sign-in, confirmation and reset pages.
+ *
+ * One narrow card on a plain background. These are the first screens anyone sees, and
+ * they are the wrong place for personality: a person here is trying to get in, not to
+ * be sold to.
+ */
+
+.auth__card {
+  width: 100%;
+  max-width: 380px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+}
+
+.auth__title {
+  margin: 0 0 18px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---- Google ------------------------------------------------------------- */
+
+.auth__google {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  padding: 9px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.auth__google:hover {
+  background: var(--bg-muted);
+}
+
+.auth__divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  color: var(--text-subtle);
+  font-size: 12px;
+}
+
+.auth__divider::before,
+.auth__divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* ---- Form --------------------------------------------------------------- */
+
+.auth__form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.auth__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.auth__field input {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+}
+
+.auth__hint {
+  color: var(--text-subtle);
+  font-weight: 400;
+  font-size: 12px;
+}
+
+.auth__submit {
+  width: 100%;
+  padding: 9px 14px;
+  border: 1px solid var(--accent-strong);
+  border-radius: var(--radius);
+  background: var(--accent-strong);
+  color: var(--accent-text);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+}
+
+.auth__submit:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: var(--accent-text);
+}
+
+/* ---- Messages ----------------------------------------------------------- */
+
+.auth__error,
+.auth__notice {
+  padding: 9px 11px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.auth__error {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.auth__notice {
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.auth__status {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.auth-loading {
+  display: grid;
+  place-items: center;
+  min-height: 100svh;
+  color: var(--text-muted);
+}
+
+/* ---- Account menu in the topbar ----------------------------------------- */
+
+.account {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.account__trigger {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border-radius: 50%;
+  border-color: transparent;
+  background: transparent;
+  overflow: hidden;
+}
+
+.account__trigger:hover:not(:disabled) {
+  border-color: var(--border-strong);
+}
+
+.account__avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account__initial {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  color: var(--accent-text);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.account__menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 50;
+  width: 270px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.account__identity {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.account__name {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.account__email {
+  color: var(--text-muted);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* A plain menu entry (Account settings); Sign out below it is the red one. */
+.account__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  text-align: left;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.account__item:hover:not(:disabled) {
+  background: var(--bg-muted);
+  border-color: var(--border);
+}
+
+.account__signout {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 13px;
+  color: var(--danger);
+}
+
+.account__signout:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border: none;
+}
+
+/* ---- Postman-style layout additions -------------------------------------- */
+
+.auth__small-link {
+  color: var(--accent-strong);
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.auth__small-link:hover {
+  text-decoration: underline;
+}
+
+/* "Forgot password?" acts on the page rather than leaving it, so it is a button —
+   drawn as the same small link. */
+button.auth__small-link {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+button.auth__small-link:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* The "switch page" line sits under the card, not inside it. */
+.auth__footer {
+  margin: 16px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.auth__footer a {
+  color: var(--accent-strong);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.auth__footer a:hover {
+  text-decoration: underline;
+}
+
+.auth__notice--info {
+  margin-top: 10px;
+  background: var(--bg-muted);
+  color: var(--text-muted);
+}
+
+/* ---- Postman layout ------------------------------------------------------
+   The logo stands alone above the card, the heading is centred, "Stay signed in"
+   shares a line with "Forgot password?", and "or" is plain text with no rules. */
+
+.auth--stacked .auth__card {
+  max-width: 420px;
+  padding: 32px 36px;
+}
+
+.auth--stacked .auth__footer {
+  margin: 0;
+}
+
+.auth__mark {
+  display: block;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  line-height: 0;
+}
+
+.auth__mark:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 3px;
+}
+
+.auth__title--centred {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth--stacked .auth__field input {
+  padding: 9px 11px;
+}
+
+.auth__options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.auth__options .auth__small-link {
+  font-size: 13px;
+}
+
+.auth__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.auth__check input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent-strong);
+  cursor: pointer;
+}
+
+.auth--stacked .auth__divider {
+  justify-content: center;
+  margin: 18px 0;
+  font-size: 13px;
+}
+
+.auth--stacked .auth__divider::before,
+.auth--stacked .auth__divider::after {
+  content: none;
+}
+
+/* ---- Email verification box ---------------------------------------------
+   One line under "Stay signed in": the icon, "Verifying…" / "Success!" /
+   "Failed!", and "Resend link" on the right. Grey box, dotted green spinner,
+   green tick or red cross — the look people know from Cloudflare's check. */
+
+.auth__fieldset {
+  display: contents;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.auth__fieldset:disabled {
+  opacity: 0.6;
+}
+
+.verify-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-subtle);
+}
+
+.verify-box__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.verify-box--success .verify-box__icon,
+.verify-box--failed .verify-box__icon {
+  border-radius: 50%;
+  color: #fff;
+}
+
+.verify-box--success .verify-box__icon {
+  background: var(--success);
+}
+
+.verify-box--failed .verify-box__icon {
+  background: var(--danger);
+}
+
+.verify-box__title {
+  flex: 1;
+  font-size: 15px;
+  color: var(--text);
+}
+
+/* Eight dots on a ring, turning in steps like a clock. */
+.verify-box__spinner {
+  position: relative;
+  width: 30px;
+  height: 30px;
+  animation: verify-spin 1.2s steps(8) infinite;
+}
+
+.verify-box__spinner i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  background: var(--success);
+  transform: rotate(calc(var(--i) * 45deg)) translateY(-12px);
+  opacity: calc(0.35 + var(--i) * 0.09);
+}
+
+@keyframes verify-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .verify-box__spinner {
+    animation-duration: 3s;
+  }
+}
+
+.verify-box__resend {
+  flex-shrink: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent-strong);
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.verify-box__resend:hover:not(:disabled) {
+  background: none;
+  text-decoration: underline;
+}
+
+.verify-box__resend:disabled {
+  color: var(--text-subtle);
+  cursor: default;
+}
+
+.verify-box__error {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--danger);
+}
+
+.auth__change-email {
+  align-self: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.auth__change-email:hover:not(:disabled) {
+  background: none;
+}
+
+/* A value shown for reference, not for editing (the name on the welcome step). */
+.auth__readonly,
+.auth__readonly:focus {
+  background: var(--bg-muted);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.auth__field > label {
+  font: inherit;
+  color: inherit;
+}

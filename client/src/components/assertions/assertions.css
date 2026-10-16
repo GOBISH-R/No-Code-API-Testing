@@ -1,0 +1,60 @@
+.assertions-editor__empty {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+}
+
+.assertion-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.assertion-row select,
+.assertion-row input[type='text'] {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+}
+
+.assertion-row__source {
+  min-width: 8.5rem;
+}
+
+.assertion-row__operator {
+  min-width: 9rem;
+}
+
+.assertion-row__path,
+.assertion-row__expected {
+  flex: 1;
+  min-width: 8rem;
+}
+
+.assertion-row__remove {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.assertion-row__remove:hover {
+  color: var(--danger);
+}
+
+.assertions-editor__add {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}

@@ -1,0 +1,120 @@
+.captures-editor__empty {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0 0 1rem;
+  max-width: 32rem;
+}
+
+.captures-editor__empty code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: var(--radius);
+  background: var(--accent-subtle);
+  color: var(--accent-strong);
+}
+
+.capture-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.capture-row select,
+.capture-row input[type='text'] {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+}
+
+.capture-row__source {
+  min-width: 8.5rem;
+}
+
+.capture-row__path,
+.capture-row__variable {
+  flex: 1;
+  min-width: 7rem;
+}
+
+.capture-row__as {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.capture-row__remove {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  padding: 0.2rem 0.4rem;
+}
+
+.capture-row__remove:hover {
+  color: var(--danger);
+}
+
+.captures-editor__add {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius);
+  border: 1px dashed var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+/* Capture results (in the Response panel) */
+
+.capture-results {
+  margin-bottom: 1rem;
+}
+
+.capture-results__title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.capture-results__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.capture-results__item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  flex-wrap: wrap;
+}
+
+.capture-results__name {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--accent-strong);
+}
+
+.capture-results__value {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--success);
+}
+
+.capture-results__error {
+  color: var(--danger);
+  font-size: 0.8rem;
+}

@@ -1,0 +1,66 @@
+/**
+ * Underline tabs.
+ *
+ * The standard for this kind of tool: the active tab is marked by a rule beneath it
+ * and a weight change, not by a filled pill. Filled tabs fight the one filled control
+ * that matters on screen — the Send button.
+ */
+
+.tab-bar {
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-bar__tab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  white-space: nowrap;
+  /* Reserve the active weight so the row does not shift when a tab is selected. */
+  border-bottom: 2px solid transparent;
+}
+
+.tab-bar__tab:hover:not(:disabled) {
+  background: transparent;
+  color: var(--text);
+}
+
+.tab-bar__tab--active {
+  color: var(--text);
+  font-weight: 600;
+  border-bottom-color: var(--accent-strong);
+}
+
+.tab-bar__badge {
+  min-width: 15px;
+  height: 15px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--bg-inset);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  text-align: center;
+}
+
+.tab-bar__tab--active .tab-bar__badge {
+  background: var(--accent-subtle);
+  color: var(--accent-strong);
+}

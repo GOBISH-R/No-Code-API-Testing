@@ -1,0 +1,136 @@
+/* ---- Account settings window ---------------------------------------------- */
+
+.account-settings {
+  max-width: 520px;
+}
+
+.account-settings__section {
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+}
+
+.account-settings__section:first-of-type {
+  padding-top: 0;
+  border-top: none;
+}
+
+.account-settings__heading {
+  margin: 0 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.account-settings__section--danger .account-settings__heading {
+  color: var(--danger);
+}
+
+.account-settings__value {
+  color: var(--text);
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.account-settings__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.account-settings__row--end {
+  justify-content: flex-end;
+}
+
+.account-settings__help {
+  flex: 1 1 200px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.account-settings__help + form {
+  margin-top: 10px;
+}
+
+/* A field that is not right yet: under it, small and red. */
+.account-settings__hint {
+  margin: -6px 0 12px;
+  color: var(--danger);
+  font-size: 11.5px;
+}
+
+/* "Name saved." — pops up at the bottom of the screen and fades after three seconds
+   (the timer that removes it is TOAST_MS in AccountSettingsModal.jsx). */
+.account-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  z-index: 200;
+  max-width: calc(100vw - 32px);
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--success);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow-lg);
+  color: var(--text);
+  font-size: 13px;
+  transform: translateX(-50%);
+  animation: account-toast 3s ease forwards;
+}
+
+@keyframes account-toast {
+  0% { opacity: 0; transform: translate(-50%, 8px); }
+  8% { opacity: 1; transform: translate(-50%, 0); }
+  85% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .account-toast { animation: none; }
+}
+
+.account-settings .modal__error {
+  margin: 10px 0 0;
+}
+
+.account-settings__warning {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.account-settings__warning ul {
+  margin: 4px 0 0;
+  padding-left: 18px;
+}
+
+.account-settings__danger {
+  border-color: var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+.account-settings__danger:hover:not(:disabled) {
+  background: var(--danger-bg);
+}
+
+.account-settings__danger--solid,
+.account-settings__danger--solid:hover:not(:disabled) {
+  background: var(--danger);
+  color: #fff;
+}
+
+/* A Save that cannot be pressed yet must look it: the faded orange the rest of the app
+   uses reads as a live button in the dark theme. Grey, flat, no pointer. */
+.account-settings .modal__confirm:disabled,
+.account-settings__danger:disabled {
+  border-color: var(--border);
+  background: var(--bg-muted);
+  color: var(--text-muted);
+  opacity: 1;
+  cursor: not-allowed;
+}

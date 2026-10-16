@@ -1,0 +1,238 @@
+.monitors__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.monitors__head .modal__title {
+  margin-bottom: 4px;
+}
+
+.monitors__lead,
+.monitors__empty,
+.monitor-form__hint {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.monitors__empty {
+  padding: 18px 0 6px;
+}
+
+.monitors__head .modal__confirm {
+  flex-shrink: 0;
+}
+
+/* ---- Create / edit form -------------------------------------------------- */
+
+.monitor-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 12px;
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+}
+
+.monitor-form__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.monitor-form__hint {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+  text-align: right;
+}
+
+/* ---- List ---------------------------------------------------------------- */
+
+.monitor-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+
+.monitor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.monitor--paused {
+  background: var(--bg-subtle);
+}
+
+.monitor--paused .monitor__name {
+  color: var(--text-muted);
+}
+
+.monitor__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.monitor__name {
+  font-weight: 600;
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitor__facts {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.monitor__state {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.monitor__badge {
+  padding: 1px 6px;
+  border-radius: var(--radius);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.monitor__badge--passed { background: var(--success-bg); color: var(--success); }
+.monitor__badge--failed { background: var(--warning-bg); color: var(--warning); }
+.monitor__badge--error { background: var(--danger-bg); color: var(--danger); }
+.monitor__badge--skipped { background: var(--bg-muted); color: var(--text-muted); }
+
+.monitor__link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent-strong);
+  font-size: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.monitor__link:hover:not(:disabled) {
+  background: none;
+}
+
+.monitor__muted {
+  font-style: italic;
+}
+
+.monitor__next {
+  margin-left: auto;
+}
+
+.monitor__error {
+  font-size: 11.5px;
+  color: var(--danger);
+}
+
+.monitor__actions {
+  flex-shrink: 0;
+  display: flex;
+  gap: 4px;
+}
+
+.monitor__actions button {
+  padding: 3px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.monitor__delete:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: transparent;
+  color: var(--danger);
+}
+
+.monitors__footer {
+  align-items: center;
+}
+
+.monitors__count {
+  margin-right: auto;
+  font-size: 12px;
+  color: var(--text-subtle);
+}
+
+@media (max-width: 640px) {
+  .monitor {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .monitor-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Alerts ---------------------------------------------------------------- */
+
+.monitor-form__alerts {
+  grid-column: 1 / -1;
+  margin: 0 0 12px;
+  padding: 8px 12px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.monitor-form__alerts legend {
+  padding: 0 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.monitor-form__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.monitor-form__webhook {
+  margin-bottom: 10px;
+}
+
+.monitor__alerts {
+  font-size: 11px;
+  color: var(--text-subtle);
+}
+
+.monitors__notice {
+  margin-bottom: 10px;
+  padding: 7px 9px;
+  border-radius: var(--radius);
+  background: var(--bg-muted);
+  font-size: 12px;
+}

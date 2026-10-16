@@ -1,0 +1,42 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "ApIForge - Express backend",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "dev:memdb": "node scripts/dev-memory-db.js",
+    "dev:local": "node scripts/dev-memory-db.js --persist",
+    "start": "node src/server.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.20.0",
+    "bcryptjs": "^3.0.3",
+    "connect-mongo": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "express-session": "^1.19.0",
+    "graphql": "^17.0.2",
+    "helmet": "^8.3.0",
+    "js-yaml": "^5.4.1",
+    "jsonpath-plus": "^10.4.0",
+    "mongoose": "^9.9.4",
+    "morgan": "^1.12.0",
+    "nodemailer": "^10.0.10",
+    "ws": "^8.21.3"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.2.0",
+    "nodemon": "^3.1.14",
+    "supertest": "^7.2.2",
+    "vitest": "^5.0.1"
+  }
+}

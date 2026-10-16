@@ -1,0 +1,158 @@
+.runtime-panel {
+  margin-top: 1.5rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--border);
+}
+
+.runtime-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.7rem;
+}
+
+.runtime-panel__header h2 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.runtime-panel__clear {
+  font-size: 0.72rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius);
+  color: var(--text-muted);
+}
+
+.runtime-panel__hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.runtime-panel__hint code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: var(--radius);
+  background: var(--accent-subtle);
+  color: var(--accent-strong);
+}
+
+.runtime-panel__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.runtime-panel__item {
+  padding: 0.25rem 0.3rem;
+  border-radius: var(--radius);
+  min-width: 0;
+}
+
+.runtime-panel__row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  min-width: 0;
+}
+
+.runtime-panel__item:hover {
+  background: var(--bg-muted);
+}
+
+.runtime-panel__name {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--accent-strong);
+  flex-shrink: 0;
+}
+
+.runtime-panel__value {
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+  cursor: text;
+  border-radius: var(--radius);
+  padding: 0.05rem 0.2rem;
+}
+
+.runtime-panel__value:hover {
+  background: var(--bg-muted);
+  color: var(--text);
+}
+
+.runtime-panel__value-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 0.78rem;
+  color: inherit;
+  background: var(--bg-muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.05rem 0.3rem;
+}
+
+.runtime-panel__remove {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  padding: 0.1rem 0.3rem;
+  flex-shrink: 0;
+}
+
+.runtime-panel__remove:hover {
+  color: var(--danger);
+}
+
+.runtime-panel__source {
+  margin: 0.1rem 0 0 0.05rem;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  opacity: 0.75;
+}
+
+.runtime-panel__add {
+  margin-top: 0.6rem;
+}
+
+.runtime-panel__add-row {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.runtime-panel__add-row input {
+  min-width: 0;
+  flex: 1;
+  font: inherit;
+  font-size: 0.76rem;
+  padding: 0.3rem 0.4rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+}
+
+.runtime-panel__add-row button {
+  flex-shrink: 0;
+  width: 1.8rem;
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+}
+
+.runtime-panel__add-error {
+  margin: 0.3rem 0 0;
+  font-size: 0.7rem;
+  color: var(--danger);
+}

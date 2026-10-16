@@ -1,0 +1,20 @@
+.globals-manager__hint {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0 0 0.9rem;
+}
+
+.globals-manager__hint code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.78rem;
+  padding: 0.05rem 0.3rem;
+  border-radius: var(--radius);
+  background: var(--accent-subtle);
+  color: var(--accent-strong);
+}
+
+.globals-manager__empty {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0.5rem 0 0;
+}

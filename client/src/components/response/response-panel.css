@@ -1,0 +1,530 @@
+/**
+ * The response pane.
+ *
+ * Fills the lower half of the workbench and scrolls internally. The status, time and
+ * size sit on one line at the top — the three numbers you check first, in the order
+ * you check them.
+ */
+
+.response-panel {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-top: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.response-panel__title {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  margin: 0;
+  padding: 0 12px;
+  flex-shrink: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-subtle);
+}
+
+.response-result {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.response-panel__notice {
+  margin: 8px 12px 0;
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  flex-shrink: 0;
+}
+
+.response-panel__notice--error {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.response-panel__notice--warning {
+  background: var(--warning-bg);
+  color: var(--warning);
+}
+
+.response-panel__notice--info {
+  background: var(--bg-muted);
+  color: var(--text-muted);
+}
+
+.response-panel__loading,
+.response-panel__empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  color: var(--text-subtle);
+  font-size: 12.5px;
+}
+
+/* ---- Status line -------------------------------------------------------- */
+
+.response-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border);
+}
+
+.response-meta__status {
+  font-weight: 700;
+  font-size: 12.5px;
+}
+
+/* Status colours live in index.css — the runner and report use them too, and they
+   should not depend on this component happening to be mounted. */
+
+/* ---- Timing and size popovers --------------------------------------------- */
+
+.response-meta__detail {
+  position: relative;
+  cursor: default;
+  border-bottom: 1px dotted var(--border-strong);
+}
+
+.response-meta__detail:hover,
+.response-meta__detail:focus-visible {
+  color: var(--text);
+}
+
+.response-meta__popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  /* Opens rightwards from the value: these sit at the panel's left edge, and centring
+     the popover on them pushed half of it outside the panel, where it was clipped. */
+  left: -10px;
+  z-index: 20;
+  display: none;
+  grid-template-columns: max-content 140px max-content;
+  align-items: center;
+  gap: 6px 10px;
+  width: max-content;
+  max-width: 340px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  font-size: 11.5px;
+  /* Read-only information: a click on it lands on the body underneath instead of
+     focusing the value and pinning the popover open over the response. */
+  pointer-events: none;
+}
+
+.response-meta__detail:hover .response-meta__popover,
+.response-meta__detail:focus-within .response-meta__popover {
+  display: grid;
+}
+
+.response-meta__popover-title {
+  grid-column: 1 / -1;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+/* Rows flatten into the popover's grid so every column lines up. */
+.response-meta__row {
+  display: contents;
+}
+
+.response-meta__row-label {
+  color: var(--text-muted);
+}
+
+.response-meta__row-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.response-meta__row--total .response-meta__row-label,
+.response-meta__row--total .response-meta__row-value {
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+  font-weight: 600;
+  color: var(--text);
+}
+
+.response-meta__row--total > span:nth-child(2) {
+  align-self: stretch;
+  border-top: 1px solid var(--border);
+}
+
+.response-meta__bar {
+  position: relative;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--bg-muted);
+}
+
+.response-meta__bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-radius: 2px;
+}
+
+.response-meta__bar-fill--dns { background: var(--method-patch); }
+.response-meta__bar-fill--tcp { background: var(--method-put); }
+.response-meta__bar-fill--tls { background: var(--method-get); }
+.response-meta__bar-fill--wait { background: var(--method-post); }
+.response-meta__bar-fill--download { background: var(--accent); }
+
+.response-meta__note {
+  grid-column: 1 / -1;
+  max-width: 300px;
+  color: var(--text-subtle);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: normal;
+}
+
+.response-meta__content-type {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 40%;
+}
+
+.response-result__error {
+  padding: 12px;
+  color: var(--danger);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.response-result__error-code {
+  color: var(--text-subtle);
+  font-family: var(--mono);
+  font-size: 11.5px;
+}
+
+/* ---- Body / headers ----------------------------------------------------- */
+
+.response-tabs {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.response-tabs__content {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.response-body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+}
+
+.response-body__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.response-body__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.response-body__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+/* ---- Find in response ---------------------------------------------------- */
+
+.response-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  height: 26px;
+  padding: 0 4px 0 8px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text-subtle);
+}
+
+/* Doubled class: the global input[type='text'] rule would otherwise win and draw a
+   second border and focus ring inside the search box's own. */
+.response-search .response-search__input {
+  width: 150px;
+  min-width: 60px;
+  height: 100%;
+  padding: 0 2px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  outline: none;
+  box-shadow: none;
+}
+
+.response-search .response-search__input:focus {
+  border: none;
+  box-shadow: none;
+}
+
+.response-search__count {
+  min-width: 52px;
+  font-size: 11px;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.response-search__btn {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.response-search__hit {
+  border-radius: 2px;
+  background: var(--warning-bg);
+  color: inherit;
+  box-shadow: 0 0 0 1px var(--warning);
+}
+
+.response-search__hit--current {
+  background: var(--accent);
+  color: var(--accent-text);
+  box-shadow: none;
+}
+
+/* Segmented Pretty | Raw switch. */
+.response-body__views {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.response-body__view {
+  font-size: 12px;
+  padding: 3px 10px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.response-body__view + .response-body__view {
+  border-left: 1px solid var(--border);
+}
+
+.response-body__view:hover:not(:disabled) {
+  background: var(--bg-muted);
+  color: var(--text);
+}
+
+.response-body__view--active,
+.response-body__view--active:hover:not(:disabled) {
+  background: var(--bg-muted);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.response-body__pre {
+  margin: 0;
+  padding: 10px 12px;
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre;
+  tab-size: 2;
+  color: var(--text);
+}
+
+.response-body__empty,
+.response-headers__empty {
+  padding: 16px 12px;
+  color: var(--text-subtle);
+  font-size: 12.5px;
+}
+
+.response-body__truncated {
+  padding: 6px 12px;
+  flex-shrink: 0;
+  border-top: 1px solid var(--border);
+  background: var(--warning-bg);
+  color: var(--warning);
+  font-size: 11.5px;
+}
+
+.response-headers {
+  padding: 4px 0;
+}
+
+.response-headers__row {
+  display: grid;
+  grid-template-columns: minmax(140px, 30%) 1fr;
+  gap: 12px;
+  padding: 5px 12px;
+  font-family: var(--mono);
+  font-size: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.response-headers__row:last-child {
+  border-bottom: none;
+}
+
+.response-headers__row > :first-child {
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+
+.response-headers__row > :last-child {
+  overflow-wrap: anywhere;
+}
+
+/* ---- Assertion + capture results ---------------------------------------- */
+
+.assertion-results {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.assertion-results__verdict {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.assertion-results__badge {
+  padding: 1px 7px;
+  border-radius: var(--radius);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: var(--success-bg);
+  color: var(--success);
+}
+
+.assertion-results__item.fail .assertion-results__badge {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+
+.assertion-results__count {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.assertion-results__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.assertion-results__detail {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.assertion-results__expression {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.assertion-results__reason {
+  color: var(--danger);
+  font-size: 11.5px;
+}
+
+.capture-results {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.capture-results__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.capture-results__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 12px;
+}
+
+.capture-results__name {
+  font-family: var(--mono);
+  color: var(--accent-strong);
+}
+
+.capture-results__value {
+  font-family: var(--mono);
+  color: var(--text);
+}
+
+.capture-results__error {
+  color: var(--danger);
+  font-size: 11.5px;
+}

@@ -1,0 +1,72 @@
+.dashboard-hint {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.dashboard-hint--error {
+  color: var(--danger);
+}
+
+.dashboard-section-title {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 1.4rem 0 0.6rem;
+}
+
+.stat-tile-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(6.5rem, 1fr));
+  gap: 0.6rem;
+}
+
+.stat-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.7rem 0.8rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+}
+
+.stat-tile__value {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.stat-tile__label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.trend-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.trend-chart svg {
+  display: block;
+}
+
+.trend-chart__legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.trend-chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.trend-chart__swatch {
+  display: inline-block;
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: var(--radius);
+}

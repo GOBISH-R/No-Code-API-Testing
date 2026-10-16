@@ -1,0 +1,305 @@
+/**
+ * Design tokens.
+ *
+ * Light is the default and dark is opt-in, the way every desktop API client ships.
+ * The palette is deliberately neutral — greys carry the whole interface and the single
+ * warm accent is spent only on the primary action, the active tab and links. Colour
+ * here means something (a method, a status, a failure); nothing is coloured for
+ * decoration.
+ */
+
+:root {
+  /* Surfaces, lightest to deepest. */
+  --bg: #ffffff;
+  --bg-subtle: #f9f9f9;
+  --bg-muted: #f2f2f2;
+  --bg-inset: #ebebeb;
+
+  --border: #e5e5e5;
+  --border-strong: #d4d4d4;
+
+  --text: #212121;
+  /* Both muted tints are set at the WCAG AA floor for body text on --bg (4.5:1),
+     not chosen by eye — #6b6b6b and #8c8c8c measured 4.47 and 3.36 and failed. */
+  --text-muted: #5c5c5c; /* 6.2:1 */
+  --text-subtle: #6e6e6e; /* 4.9:1 */
+
+  /* Two accents, because one cannot do both jobs legibly.
+     --accent is the brand hue, used where contrast rules do not apply to text: the
+     active-tab rule, the focus ring, a selected row's edge.
+     --accent-strong is the same hue darkened until it passes WCAG AA as text and as a
+     button fill. #ff6c37 on white is 2.55:1 — well under the 4.5:1 floor — so using it
+     for "+ Add Param" or a Send label would be brand loyalty at the reader's expense. */
+  --accent: #ff6c37;
+  --accent-strong: #c2410c; /* 5.2:1 on white */
+  --accent-hover: #9a3412;
+  --accent-text: #ffffff; /* foreground on --accent-strong */
+  --accent-subtle: #fff1eb;
+  --accent-border: #ffc4ad;
+
+  --success: #177230; /* 5.3:1 on --success-bg, where the pass badge sits */
+  --success-bg: #e6f4ea;
+  --danger: #d1242f;
+  --danger-bg: #ffebe9;
+  --warning: #9a6700;
+  --warning-bg: #fff8c5;
+
+  /* HTTP methods. The convention every API tool shares, so a GET reads as a GET. */
+  --method-get: #1a7f37;
+  --method-post: #946200; /* 5.0:1 on the panel tint these tags sit on */
+  --method-put: #0969da;
+  --method-patch: #8250df;
+  --method-delete: #d1242f;
+  --method-head: #6b6b6b;
+  --method-options: #6b6b6b;
+
+  /* Small radii: a dense tool should look machined, not pillowy. */
+  --radius: 4px;
+  --radius-lg: 6px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.14);
+
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --heading: var(--sans);
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+
+  /* 16px keeps rem arithmetic sane for the landing page; the workspace overrides this
+     to a denser size on .app-shell rather than shrinking every rem in the project. */
+  font: 16px/1.5 var(--sans);
+  color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light is the default outright, not "light unless the OS says otherwise". An API
+   client is a long-session tool whose look should not change because someone's
+   machine switched at sunset — dark is a deliberate choice, made with the toggle. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #1b1b1b;
+  --bg-subtle: #212121;
+  --bg-muted: #262626;
+  --bg-inset: #2e2e2e;
+
+  --border: #323232;
+  --border-strong: #454545;
+
+  --text: #e8e8e8;
+  --text-muted: #a0a0a0;
+  /* #767676 measured 3.79:1 on the panel surface; #8d8d8d is the first grey that
+     clears 4.5:1 there, with a little margin over the computed #888888 minimum. */
+  --text-subtle: #8d8d8d;
+
+  /* On a dark surface the bright hue already clears AA (6.1:1), so it serves as the
+     text accent directly. The filled button flips instead: near-black on orange, which
+     is 6.1:1 — white on orange would be 2.8:1 in any theme. */
+  --accent: #ff6c37;
+  --accent-strong: #ff6c37;
+  --accent-hover: #ff8257;
+  --accent-text: #1b1b1b;
+  --accent-subtle: #37201a;
+  --accent-border: #6b3520;
+
+  --success: #3fb950;
+  --success-bg: #12261a;
+  --danger: #f85149;
+  --danger-bg: #2d1514;
+  --warning: #d29922;
+  --warning-bg: #2b2413;
+
+  --method-get: #3fb950;
+  --method-post: #d29922;
+  --method-put: #58a6ff;
+  --method-patch: #bc8cff;
+  --method-delete: #f85149;
+  --method-head: #a0a0a0;
+  --method-options: #a0a0a0;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--heading);
+  color: var(--text);
+  font-weight: 600;
+}
+
+p {
+  margin: 0;
+}
+
+/* ---- Form controls ------------------------------------------------------ */
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+}
+
+input[type='text'],
+input[type='search'],
+input[type='number'],
+input[type='password'],
+select,
+textarea {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+input[type='text']:hover,
+input[type='search']:hover,
+input[type='number']:hover,
+select:hover,
+textarea:hover {
+  border-color: var(--border-strong);
+}
+
+input[type='text']:focus,
+input[type='search']:focus,
+input[type='number']:focus,
+input[type='password']:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 2px var(--accent-subtle);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-subtle);
+}
+
+select {
+  cursor: pointer;
+}
+
+/* Every visible focus ring is the accent, so keyboard users get one consistent
+   signal instead of the browser default fighting the theme. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ---- Buttons ------------------------------------------------------------ */
+
+button {
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--bg-muted);
+  border-color: var(--border-strong);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* The one filled control on any given screen. */
+.modal__confirm {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--accent-text);
+  font-weight: 500;
+}
+
+.modal__confirm:hover:not(:disabled) {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn-ghost {
+  border-color: transparent;
+  background: transparent;
+}
+
+/* ---- HTTP status colours ------------------------------------------------ */
+
+/* Class names come from utils/format.js statusClass(), and are used by the response
+   pane, the collection runner and the printed report alike. A 4xx is the caller's
+   fault and a 5xx is the server's, but both are failures to whoever is testing — so
+   they share one red rather than inventing a distinction nobody acts on. */
+.status-2xx { color: var(--success); }
+.status-3xx { color: var(--method-put); }
+.status-4xx,
+.status-5xx,
+.status-error { color: var(--danger); }
+
+code {
+  font-family: var(--mono);
+  font-size: 0.92em;
+  border-radius: var(--radius);
+  color: var(--text);
+  padding: 1px 5px;
+  background: var(--bg-muted);
+}
+
+/* ---- Scrollbars --------------------------------------------------------- */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border: 3px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--text-subtle);
+  background-clip: content-box;
+}

@@ -1,0 +1,258 @@
+/**
+ * The look of the account pages: the warm background, the split sign-in / sign-up
+ * layout with its illustration, and the status pages (verifying, verified, failed,
+ * check your email). Modelled on Postman's identity pages.
+ */
+
+:root {
+  /* The warm glow the account pages fade into, as Postman's do. */
+  --auth-glow: #fbe3c8;
+  --auth-glow-soft: #fdf1e3;
+  --auth-dots: rgba(120, 90, 60, 0.13);
+  --auth-art-line: #cdbba8;
+  --auth-art-soft: #fdf0e1;
+}
+
+:root[data-theme='dark'] {
+  --auth-glow: rgba(255, 108, 55, 0.16);
+  --auth-glow-soft: rgba(255, 108, 55, 0.06);
+  --auth-dots: rgba(255, 255, 255, 0.06);
+  --auth-art-line: #5d544c;
+  --auth-art-soft: rgba(255, 108, 55, 0.07);
+}
+
+/* ---- Page background ---------------------------------------------------- */
+
+.auth {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  padding: 40px 16px;
+  overflow: hidden;
+  background:
+    radial-gradient(120% 60% at 50% 115%, var(--auth-glow) 0%, var(--auth-glow-soft) 45%, transparent 75%),
+    var(--bg-subtle);
+}
+
+/* A faint dot grid that fades out towards the bottom. */
+.auth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image: radial-gradient(var(--auth-dots) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.auth__layout {
+  min-height: calc(100svh - 80px);
+  display: grid;
+  place-items: center;
+}
+
+.auth__main {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.auth--stacked .auth__card {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 32px -8px rgba(80, 50, 20, 0.14);
+}
+
+/* ---- Split layout: sign-in and sign-up ------------------------------------
+   On a wide screen the form sits on the right and the left shows the brand, what
+   the app does and an illustration. Below 900px the panel goes and the page is the
+   plain centred card, as Postman's is. */
+
+.auth__aside {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  .auth--split .auth__layout {
+    max-width: 1080px;
+    margin: 0 auto;
+    grid-template-columns: minmax(0, 1fr) 440px;
+    gap: 72px;
+    align-items: center;
+    /* Columns fill their tracks; centring them would shrink the illustration. */
+    justify-items: stretch;
+  }
+
+  .auth--split .auth__aside {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .auth--split .auth__main {
+    align-items: stretch;
+  }
+
+  .auth__mark--narrow-only {
+    display: none;
+  }
+}
+
+.auth__aside-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  align-self: flex-start;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.auth__aside-heading {
+  margin: 36px 0 14px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.auth__aside-points {
+  list-style: none;
+  margin: 0 0 28px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth__aside-points li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 14.5px;
+  color: var(--text-muted);
+}
+
+.auth__aside-points li::before {
+  content: '+';
+  position: absolute;
+  left: 2px;
+  top: -1px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* ---- Illustration ------------------------------------------------------- */
+
+.auth-art {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  overflow: visible;
+}
+
+.auth-art__glow { fill: var(--auth-art-soft); }
+.auth-art__card { fill: var(--bg); stroke: var(--auth-art-line); stroke-width: 1.6; }
+.auth-art__rule { stroke: var(--auth-art-line); stroke-width: 1.4; }
+.auth-art__dot { fill: var(--auth-art-line); }
+.auth-art__field { fill: none; stroke: var(--auth-art-line); stroke-width: 1.4; }
+.auth-art__text-line { stroke: var(--auth-art-line); stroke-width: 5; stroke-linecap: round; opacity: 0.7; }
+.auth-art__tab-active { stroke: var(--accent); stroke-width: 3; stroke-linecap: round; }
+.auth-art__accent { fill: var(--accent); }
+.auth-art__accent--soft { opacity: 0.75; }
+.auth-art__badge { fill: #fff; font: 700 10px var(--sans); }
+.auth-art__code { fill: var(--accent); font: 700 16px var(--mono); }
+.auth-art__ok { fill: var(--success); }
+.auth-art__tick { fill: none; stroke: #fff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.auth-art__tick--big { stroke-width: 2.6; }
+.auth-art__status { fill: var(--success); font: 700 15px var(--sans); }
+.auth-art__gauge-track { fill: none; stroke: var(--auth-art-line); stroke-width: 8; stroke-linecap: round; opacity: 0.45; }
+.auth-art__gauge { fill: none; stroke: var(--accent); stroke-width: 8; stroke-linecap: round; }
+.auth-art__needle { stroke: var(--text-muted); stroke-width: 2.4; stroke-linecap: round; }
+.auth-art__spark { fill: var(--accent); opacity: 0.55; }
+.auth-art__speck { fill: var(--auth-art-line); }
+
+/* A slow drift, so the picture feels alive without pulling focus from the form. */
+.auth-art__float { animation: auth-float 6s ease-in-out infinite; }
+.auth-art__float--slow { animation-duration: 8s; }
+.auth-art__float--late { animation-delay: -3s; }
+
+@keyframes auth-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* ---- Status pages ------------------------------------------------------- */
+
+.auth-status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 8px 0 4px;
+}
+
+.auth-status__title {
+  margin: 20px 0 8px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.auth-status__text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.auth-status__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-top: 22px;
+}
+
+/* The large red cross at the top of the "Couldn't verify just now" page. */
+.status-icon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+}
+
+.status-icon svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.status-icon--failed {
+  background: var(--danger);
+  color: #fff;
+  box-shadow: 0 0 0 8px var(--danger-bg);
+  animation: status-pop 0.35s ease-out both;
+}
+
+/* The cross draws itself once the circle has landed. */
+.status-icon__draw {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: status-draw 0.4s 0.2s ease-out forwards;
+}
+
+@keyframes status-pop { from { transform: scale(0.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes status-draw { to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-art__float { animation: none; }
+  .status-icon--failed { animation: none; }
+  .status-icon__draw { animation: none; stroke-dashoffset: 0; }
+}

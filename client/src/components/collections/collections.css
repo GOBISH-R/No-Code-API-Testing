@@ -1,0 +1,503 @@
+/**
+ * The collection tree and the dialogs that act on it.
+ *
+ * Rows are 26px, full-bleed to the sidebar edges, and selected by a tinted background
+ * with an accent rule on the left — the file-tree convention. Row actions stay hidden
+ * until the row is hovered, because four icons on every row turns a list of names into
+ * a wall of controls.
+ */
+
+.collections-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.collections-panel__search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 8px;
+  padding: 0 8px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text-subtle);
+}
+
+.collections-panel__search:focus-within {
+  border-color: var(--accent);
+}
+
+.collections-panel__search input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  outline: none;
+  box-shadow: none;
+}
+
+.collections-panel__new-form {
+  display: flex;
+  gap: 4px;
+  padding: 0 8px;
+}
+
+.collections-panel__new-form input {
+  flex: 1;
+  min-width: 0;
+  font-size: 12px;
+}
+
+.collections-panel__new-form button {
+  flex-shrink: 0;
+  padding: 0 8px;
+}
+
+.collections-panel__import {
+  margin: 0 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-style: dashed;
+}
+
+.collections-panel__import:hover:not(:disabled) {
+  color: var(--text);
+  border-style: dashed;
+}
+
+.collections-panel__hint {
+  padding: 0 12px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.collections-panel__hint--error {
+  color: var(--danger);
+}
+
+.collections-panel__hint--ok {
+  color: var(--success);
+}
+
+.collections-panel__list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Collection ---------------------------------------------------------- */
+
+.collection-group__header,
+.folder-node__header,
+.request-list-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 26px;
+  padding-right: 6px;
+  font-size: 12.5px;
+  color: var(--text);
+}
+
+.collection-group__header {
+  padding-left: 6px;
+  font-weight: 600;
+}
+
+.collection-group__header:hover,
+.folder-node__header:hover,
+.request-list-item:hover {
+  background: var(--bg-muted);
+}
+
+.collection-group__toggle,
+.folder-node__toggle {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  flex-shrink: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-subtle);
+}
+
+.collection-group__toggle:hover:not(:disabled),
+.folder-node__toggle:hover:not(:disabled) {
+  background: transparent;
+  border-color: transparent;
+  color: var(--text);
+}
+
+.collection-group__name,
+.folder-node__name,
+.request-list-item__name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.collection-group__count {
+  flex-shrink: 0;
+  min-width: 16px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--bg-inset);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  text-align: center;
+}
+
+/* Row actions: present but quiet until the row is hovered. Reserved width would still
+   crowd the name, so they are removed from flow and revealed in place. */
+.collection-group__add-folder,
+.collection-group__run,
+.collection-group__export,
+.collection-group__copy,
+.collection-group__delete,
+.folder-node__add,
+.folder-node__delete,
+.request-list-item__delete {
+  display: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  flex-shrink: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-subtle);
+}
+
+.collection-group__header:hover .collection-group__add-folder,
+.collection-group__header:hover .collection-group__run,
+.collection-group__header:hover .collection-group__export,
+.collection-group__header:hover .collection-group__copy,
+.collection-group__header:hover .collection-group__delete,
+.folder-node__header:hover .folder-node__add,
+.folder-node__header:hover .folder-node__delete,
+.request-list-item:hover .request-list-item__delete {
+  display: grid;
+}
+
+/* A touch screen has no hover, so the row actions are always shown there. */
+@media (hover: none) {
+  .collection-group__add-folder,
+  .collection-group__run,
+  .collection-group__export,
+  .collection-group__copy,
+  .collection-group__delete,
+  .folder-node__add,
+  .folder-node__delete,
+  .request-list-item__delete {
+    display: grid;
+    width: 26px;
+    height: 26px;
+  }
+
+  .request-list-item__move {
+    display: block;
+    max-width: 90px;
+  }
+}
+
+/* A run in progress must stay visible after the pointer leaves the row. */
+.collection-group__run:disabled,
+.collection-group__header .collection-group__run[aria-busy='true'] {
+  display: grid;
+}
+
+.collection-group__add-folder:hover:not(:disabled),
+.collection-group__run:hover:not(:disabled),
+.collection-group__export:hover:not(:disabled),
+.collection-group__copy:hover:not(:disabled),
+.folder-node__add:hover:not(:disabled) {
+  background: var(--bg-inset);
+  border-color: transparent;
+  color: var(--text);
+}
+
+.collection-group__delete:hover:not(:disabled),
+.folder-node__delete:hover:not(:disabled),
+.request-list-item__delete:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: transparent;
+  color: var(--danger);
+}
+
+.collection-group__run:hover:not(:disabled) {
+  color: var(--success);
+}
+
+.collection-group__spinner {
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--border-strong);
+  border-top-color: var(--accent-strong);
+  border-radius: 50%;
+  animation: collection-spin 0.7s linear infinite;
+}
+
+@keyframes collection-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .collection-group__spinner {
+    animation: none;
+  }
+}
+
+.collection-group__rename-input,
+.folder-node__rename-input {
+  flex: 1;
+  min-width: 0;
+  padding: 1px 4px;
+  font-size: 12.5px;
+}
+
+.collection-group__requests,
+.folder-node__children {
+  display: flex;
+  flex-direction: column;
+}
+
+.collection-group__empty,
+.folder-node__empty {
+  padding: 3px 12px 3px 28px;
+  color: var(--text-subtle);
+  font-size: 11.5px;
+}
+
+/* ---- Folder -------------------------------------------------------------- */
+
+.folder-node__header {
+  padding-left: 18px;
+}
+
+.folder-node__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--text-subtle);
+}
+
+.folder-node__children .request-list-item {
+  padding-left: 42px;
+}
+
+/* ---- Request ------------------------------------------------------------- */
+
+.request-list-item {
+  padding-left: 26px;
+  position: relative;
+  cursor: pointer;
+}
+
+/* The request open in the builder. */
+.request-list-item--selected {
+  background: var(--accent-subtle);
+}
+
+.request-list-item--selected::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 2px;
+  background: var(--accent-strong);
+}
+
+.request-list-item__select {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.request-list-item__select:hover:not(:disabled) {
+  background: transparent;
+  border-color: transparent;
+}
+
+/* The method is the row's identity — fixed width so names align down the column. */
+.method-tag {
+  flex-shrink: 0;
+  width: 38px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-align: right;
+  color: var(--text-muted);
+}
+
+.method-tag--get { color: var(--method-get); }
+.method-tag--post { color: var(--method-post); }
+.method-tag--put { color: var(--method-put); }
+.method-tag--patch { color: var(--method-patch); }
+.method-tag--delete { color: var(--method-delete); }
+.method-tag--head { color: var(--method-head); }
+.method-tag--options { color: var(--method-options); }
+.method-tag--ws { color: var(--method-patch); }
+
+.request-list-item__move {
+  flex-shrink: 0;
+  display: none;
+  max-width: 110px;
+  font-size: 11px;
+  padding: 1px 4px;
+}
+
+.request-list-item:hover .request-list-item__move {
+  display: block;
+}
+
+/* ---- Modals -------------------------------------------------------------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.modal {
+  width: 100%;
+  max-width: 460px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  box-shadow: var(--shadow-lg);
+  font-size: 13px;
+}
+
+.modal--wide {
+  max-width: 780px;
+}
+
+.modal__title {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.modal__field input,
+.modal__field select {
+  width: 100%;
+}
+
+.modal__radio {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text);
+  margin-bottom: 6px;
+  cursor: pointer;
+}
+
+.modal__error {
+  margin-bottom: 10px;
+  padding: 7px 9px;
+  border-radius: var(--radius);
+  background: var(--danger-bg);
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* ---- Export credential warning ------------------------------------------- */
+
+.export-warning__lead {
+  margin: 0 0 10px;
+  line-height: 1.6;
+}
+
+.export-warning__requests {
+  margin: 0 0 10px;
+  padding: 7px 10px 7px 24px;
+  border-left: 2px solid var(--warning);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--warning-bg);
+  font-size: 12px;
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.export-warning__more {
+  list-style: none;
+  margin-left: -14px;
+  color: var(--text-muted);
+}
+
+.export-warning__note {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* ---- Copy / move to another workspace ------------------------------------- */
+
+.copy-collection__hint,
+.copy-collection__done {
+  margin: 4px 0 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+.copy-collection__done {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.copy-collection__disabled {
+  color: var(--text-subtle);
+  cursor: not-allowed;
+}

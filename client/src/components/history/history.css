@@ -1,0 +1,152 @@
+.history-panel__bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 8px 6px;
+}
+
+/* Reuses the collections search box; only the outer margin differs. */
+.history-panel__search {
+  flex: 1;
+  margin: 0;
+}
+
+.history-panel__clear {
+  flex-shrink: 0;
+  padding: 3px 8px;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11.5px;
+}
+
+.history-panel__clear:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: transparent;
+  color: var(--danger);
+}
+
+.history-panel__empty {
+  margin: 4px 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-subtle);
+}
+
+.history-group + .history-group {
+  margin-top: 6px;
+}
+
+.history-group__label {
+  margin: 0;
+  padding: 6px 12px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.history-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-right: 6px;
+}
+
+.history-item:hover {
+  background: var(--bg-muted);
+}
+
+.history-item--active {
+  background: var(--accent-subtle);
+}
+
+.history-item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--accent);
+}
+
+.history-item__open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 4px 4px 4px 12px;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  font-size: 12px;
+  text-align: left;
+  color: var(--text);
+}
+
+.history-item__open:hover:not(:disabled) {
+  background: transparent;
+}
+
+.history-item__url {
+  flex: 1;
+  min-width: 0;
+  /* Wraps to a second line, as Postman's history does: on one line, every request to
+     the same long host looked identical. Anything past two lines is in the tooltip. */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.35;
+}
+
+.history-item__meta {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.history-item__status {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.history-item__delete {
+  display: none;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  flex-shrink: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.history-item:hover .history-item__delete,
+.history-item__delete:focus-visible {
+  display: grid;
+}
+
+/* A touch screen has no hover, so Delete is always shown there. */
+@media (hover: none) {
+  .history-item__delete {
+    display: grid;
+    width: 26px;
+    height: 26px;
+  }
+}
+
+.history-item__delete:hover:not(:disabled) {
+  background: var(--danger-bg);
+  border-color: transparent;
+  color: var(--danger);
+}

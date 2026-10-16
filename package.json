@@ -1,0 +1,23 @@
+{
+  "name": "visual-api-testing-suite",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Visual / No-Code API Testing Platform",
+  "scripts": {
+    "dev": "concurrently -n server,client -c blue,magenta \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:memdb": "concurrently -n server,client -c blue,magenta \"npm:dev:server:memdb\" \"npm:dev:client\"",
+    "dev:local": "concurrently -n server,client -c blue,magenta \"npm:dev:server:local\" \"npm:dev:client\"",
+    "dev:server": "npm run dev --prefix server",
+    "dev:server:memdb": "npm run dev:memdb --prefix server",
+    "dev:server:local": "npm run dev:local --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server",
+    "test": "npm test --prefix server && npm test --prefix client",
+    "lint": "npx oxlint client/src server/src",
+    "install:all": "npm install --prefix server && npm install --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
+}

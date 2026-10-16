@@ -1,0 +1,74 @@
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem 1.5rem;
+  background: var(--bg);
+}
+
+.error-boundary__panel {
+  width: 100%;
+  max-width: 34rem;
+  padding: 1.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+}
+
+.error-boundary__title {
+  margin: 0 0 0.6rem;
+  font-family: var(--heading);
+  font-size: 1.15rem;
+  color: var(--text);
+}
+
+.error-boundary__lead {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.error-boundary__message {
+  margin: 0 0 1.25rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-lg);
+  background: var(--bg-muted);
+  color: var(--danger);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 12rem;
+  overflow: auto;
+}
+
+.error-boundary__actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.error-boundary__button {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.error-boundary__button--primary {
+  border-color: var(--accent-border);
+  background: var(--accent-subtle);
+  color: var(--accent-strong);
+}
+
+.error-boundary__hint {
+  margin: 0.9rem 0 0;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}

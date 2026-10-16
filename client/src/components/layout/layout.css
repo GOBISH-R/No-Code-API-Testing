@@ -1,0 +1,69 @@
+/* Topbar chrome. The .topbar layout itself lives in App.css with the shell. */
+
+.env-selector {
+  display: flex;
+  align-items: center;
+}
+
+.env-selector__select {
+  min-width: 160px;
+  max-width: 220px;
+  padding: 4px 8px;
+  font-size: 12px;
+  background: var(--bg);
+}
+
+.connection-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  padding-left: 4px;
+}
+
+.connection-status__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-subtle);
+  flex-shrink: 0;
+}
+
+.connection-status--online .connection-status__dot {
+  background: var(--success);
+}
+
+.connection-status--offline .connection-status__dot {
+  background: var(--danger);
+}
+
+.connection-status--loading .connection-status__dot {
+  background: var(--warning);
+}
+
+/* The label is redundant next to the dot once you know the app; keep it for the first
+   few sessions but let it go when space is tight. */
+@media (max-width: 1100px) {
+  .connection-status__label {
+    display: none;
+  }
+}
+
+/* With the workspace switcher in the bar too, a narrow window has to give way somewhere.
+   The site name is never the thing to cut: the two pickers narrow instead. */
+.topbar__brand {
+  flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+  .env-selector__select {
+    min-width: 0;
+    max-width: 140px;
+  }
+
+  .ws-switcher__select {
+    max-width: 130px;
+  }
+}

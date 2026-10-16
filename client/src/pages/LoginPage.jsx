@@ -18,6 +18,7 @@ const GOOGLE_ERRORS = {
   google_incomplete: 'Google did not complete the sign-in. Try again.',
   google_unverified: 'Your Google account’s email address is unverified.',
   google_failed: 'Google sign-in failed. Try again, or use your password.',
+  email_failed: 'We couldn’t send the confirmation email right now. Try again in a moment.',
 };
 
 const RESET_LABELS = {

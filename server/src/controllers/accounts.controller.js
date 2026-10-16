@@ -15,6 +15,14 @@ import { hashToken } from '../services/accounts/tokens.js';
  * endpoints are rate-limited, which is what keeps them from being used at scale.
  */
 
+// Said when the mail server refuses or times out — never "check your email" for a mail
+// that did not leave.
+const MAIL_DOWN = 'We couldn’t send the email right now. Try again in a moment.';
+
+function mailFailed(err) {
+  return /Could not send email/.test(err?.message ?? '');
+}
+
 // The session carries an id, never the user object — so a changed or disabled account
 // takes effect on the next request rather than whenever the cookie happens to expire.
 //
@@ -69,7 +77,8 @@ export async function register(req, res, next) {
     if (err instanceof ValidationError) {
       res.status(err.code === 'EMAIL_TAKEN' ? 409 : 400);
     }
-    next(err);
+    if (mailFailed(err)) return res.status(503).json({ status: 'error', message: MAIL_DOWN });
+    return next(err);
   }
 }
 
@@ -182,14 +191,11 @@ export async function resendPending(req, res, next) {
     pending.tokenHash = await accounts.sendNewVerificationLink(pending.pendingId);
     return req.session.save(() => res.json({ status: 'waiting', email }));
   } catch (err) {
+    // The previous link is still in place (see sendNewVerificationLink), so the page
+    // just says so and keeps waiting.
+    if (mailFailed(err)) return res.status(503).json({ status: 'error', message: MAIL_DOWN });
     return next(err);
   }
-}
-
-const MAIL_DOWN = 'We couldn’t send the email right now. Try again in a moment.';
-
-function mailFailed(err) {
-  return /Could not send email/.test(err?.message ?? '');
 }
 
 /**
@@ -461,7 +467,9 @@ export async function googleCallback(req, res) {
     rememberWaiting(req, pending, remember);
     return req.session.save(() => res.redirect(clientUrl('/signup?verify=sent')));
   } catch (err) {
-    const reason = err?.code === 'EMAIL_UNVERIFIED_AT_GOOGLE' ? 'google_unverified' : 'google_failed';
+    let reason = 'google_failed';
+    if (err?.code === 'EMAIL_UNVERIFIED_AT_GOOGLE') reason = 'google_unverified';
+    else if (mailFailed(err)) reason = 'email_failed';
     return res.redirect(clientUrl(`/login?error=${reason}`));
   }
 }

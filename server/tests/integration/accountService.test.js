@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, afterAll, beforeEach, afterEach, vi } from 'vitest';
 
 // The limits on sign-up and sign-in have their own tests (rateLimits.test.js). Here
 // every request comes from the same address, so they would stop the flows under test.
@@ -31,11 +31,14 @@ import { ValidationError } from '../../src/utils/errors.js';
 
 let mongo;
 let sent = [];
+// Flipped by tests to stand in for a mail server that refuses (as on a host blocking SMTP).
+let mailDown = false;
 
 beforeAll(async () => {
   mongo = await MongoMemoryServer.create();
   await mongoose.connect(mongo.getUri());
   setMailTransport(async (message) => {
+    if (mailDown) throw new Error('connect ETIMEDOUT smtp.example.com:465');
     sent.push(message);
     return { captured: true };
   });
@@ -693,5 +696,73 @@ describe('forgot password: "Is this you?" by email, the new password on the sign
     const { browser } = await askForReset();
     await browser.delete('/api/accounts/reset/pending').expect(204);
     expect(await statusOf(browser)).toBe('none');
+  });
+});
+
+describe('when the mail server is down (e.g. SMTP blocked by the host)', () => {
+  const password = 'correct horse battery';
+  let app;
+  let request;
+
+  beforeAll(async () => {
+    app = (await import('../../src/app.js')).default;
+    request = (await import('supertest')).default;
+  });
+
+  afterEach(() => {
+    mailDown = false;
+  });
+
+  it('sign-up says the email could not be sent, instead of waiting for one that never left', async () => {
+    mailDown = true;
+    const browser = request.agent(app);
+    const res = await browser.post('/api/accounts/register').send({ email: 'ada@example.com', password });
+    expect(res.status).toBe(503);
+    expect(res.body.message).toBe('We couldn’t send the email right now. Try again in a moment.');
+    expect((await browser.get('/api/accounts/pending')).body.status).toBe('none');
+
+    // Once mail works again, signing up simply sends the link.
+    mailDown = false;
+    await browser.post('/api/accounts/register').send({ email: 'ada@example.com', password }).expect(202);
+    expect((await browser.get('/api/accounts/pending')).body.status).toBe('waiting');
+  });
+
+  it('a failed Resend changes nothing: the page keeps waiting and the emailed link still works', async () => {
+    const browser = request.agent(app);
+    await browser.post('/api/accounts/register').send({ email: 'ada@example.com', password }).expect(202);
+    const link = tokenFromLastEmail();
+
+    mailDown = true;
+    const resend = await browser.post('/api/accounts/pending/resend');
+    expect(resend.status).toBe(503);
+    expect(resend.body.message).toBe('We couldn’t send the email right now. Try again in a moment.');
+
+    // The bug this guards against: the wait used to end ("gone") and the box vanished.
+    expect((await browser.get('/api/accounts/pending')).body.status).toBe('waiting');
+    mailDown = false;
+    await browser.post('/api/accounts/verify-email').send({ token: link }).expect(200);
+    expect((await browser.get('/api/accounts/pending')).body.status).toBe('verified');
+  });
+
+  it('a failed password-reset Resend keeps the request and its emailed link', async () => {
+    await registerAndVerify('ada@example.com', password);
+    const browser = request.agent(app);
+    await browser.post('/api/accounts/forgot-password').send({ email: 'ada@example.com' }).expect(202);
+    const link = tokenFromLastEmail();
+
+    mailDown = true;
+    expect((await browser.post('/api/accounts/reset/pending/resend')).status).toBe(503);
+    expect((await browser.get('/api/accounts/reset/pending')).body.status).toBe('waiting');
+
+    mailDown = false;
+    await request(app).post('/api/accounts/reset/answer').send({ token: link, answer: 'yes' }).expect(200);
+    expect((await browser.get('/api/accounts/reset/pending')).body.status).toBe('confirmed');
+  });
+
+  it('Forgot password says the email could not be sent', async () => {
+    await registerAndVerify('ada@example.com', password);
+    mailDown = true;
+    const res = await request(app).post('/api/accounts/forgot-password').send({ email: 'ada@example.com' });
+    expect(res.status).toBe(503);
   });
 });

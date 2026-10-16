@@ -91,11 +91,10 @@ async function startPendingSignup({ email, name, passwordHash = null, googleId =
     { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
   );
 
-  // Fire and forget: a mail outage must not lose the sign-up. The waiting page offers
-  // Resend if the email never arrives.
-  sendVerificationEmail({ to: email, name: pending.name, token: verification.raw }).catch((err) =>
-    console.error(`[mail] confirmation email not sent: ${err.message}`),
-  );
+  // Waited for, not sent in the background: if the mail server refuses, the person must
+  // be told now rather than left watching "Verifying…" for an email that never left.
+  // The sign-up stays stored, so trying again simply sends a fresh link.
+  await sendVerificationEmail({ to: email, name: pending.name, token: verification.raw });
 
   pending.$locals.verificationTokenHash = verification.hash;
   return pending;
@@ -144,14 +143,24 @@ export async function registerWithGoogle(profile) {
  */
 export async function sendNewVerificationLink(pendingId) {
   if (!mongoose.isValidObjectId(pendingId)) return null;
-  const pending = await PendingSignup.findById(pendingId);
+  // tokenHash is not loaded by default; it is needed to put the current link back if
+  // the new email cannot be sent.
+  const pending = await PendingSignup.findById(pendingId).select('+tokenHash');
   if (!pending) return null;
 
+  const previous = { tokenHash: pending.tokenHash, tokenExpiresAt: pending.tokenExpiresAt };
   const verification = createToken(VERIFY_TTL_MS);
   pending.tokenHash = verification.hash;
   pending.tokenExpiresAt = verification.expiresAt;
   await pending.save();
-  await sendVerificationEmail({ to: pending.email, name: pending.name, token: verification.raw });
+  try {
+    await sendVerificationEmail({ to: pending.email, name: pending.name, token: verification.raw });
+  } catch (err) {
+    // Nothing was sent, so nothing may change: the link already in the inbox keeps
+    // working, and this browser keeps waiting on it.
+    await PendingSignup.updateOne({ _id: pending._id }, { $set: previous });
+    throw err;
+  }
   return verification.hash;
 }
 
@@ -264,6 +273,13 @@ const RESET_FIELDS = '+resetTokenHash +resetTokenExpiresAt +resetAnswer +resetRe
 const RESET_LINK_INVALID = LINK_NO_LONGER_VALID;
 
 async function sendResetConfirmation(user, userAgent) {
+  const previous = {
+    resetTokenHash: user.resetTokenHash,
+    resetTokenExpiresAt: user.resetTokenExpiresAt,
+    resetAnswer: user.resetAnswer,
+    resetRequestedFrom: user.resetRequestedFrom,
+    resetRequestedAt: user.resetRequestedAt,
+  };
   const reset = createToken(RESET_TTL_MS);
   user.resetTokenHash = reset.hash;
   user.resetTokenExpiresAt = reset.expiresAt;
@@ -272,13 +288,20 @@ async function sendResetConfirmation(user, userAgent) {
   user.resetRequestedAt = new Date();
   await user.save();
 
-  await sendResetConfirmationEmail({
-    to: user.email,
-    name: user.name,
-    token: reset.raw,
-    device: user.resetRequestedFrom,
-    requestedAt: formatRequestTime(user.resetRequestedAt),
-  });
+  try {
+    await sendResetConfirmationEmail({
+      to: user.email,
+      name: user.name,
+      token: reset.raw,
+      device: user.resetRequestedFrom,
+      requestedAt: formatRequestTime(user.resetRequestedAt),
+    });
+  } catch (err) {
+    // Nothing was sent, so nothing may change: a request already waiting keeps its link.
+    Object.assign(user, previous);
+    await user.save();
+    throw err;
+  }
   return reset.hash;
 }
 

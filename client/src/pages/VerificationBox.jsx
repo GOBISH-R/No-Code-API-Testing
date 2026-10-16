@@ -124,6 +124,9 @@ export default function VerificationBox({
       }
       setPhase('waiting');
     } catch (err) {
+      // Nothing was sent (the old link still works), so the countdown is not owed:
+      // the person can try again straight away.
+      setCooldown(0);
       setError(err.message);
     }
   };

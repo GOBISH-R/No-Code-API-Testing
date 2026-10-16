@@ -167,6 +167,20 @@ describe('sign-up', () => {
     expect(accountService.resendVerificationLink).toHaveBeenCalledTimes(1);
   });
 
+  it('a Resend that could not be sent keeps the wait, says why, and can be tried again at once', async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    await signUpAndWait();
+    await waitOutResendCountdown();
+    accountService.resendVerificationLink.mockRejectedValueOnce(
+      new Error('We couldn’t send the email right now. Try again in a moment.'),
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Resend link' }));
+
+    expect((await screen.findByRole('alert')).textContent).toMatch(/couldn’t send the email/);
+    expect(screen.getByText('Verifying…')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Resend link' }).disabled).toBe(false);
+  });
+
   it('shows "already exists" under the form when the email is taken', async () => {
     accountService.register.mockRejectedValueOnce(
       new Error('An account with this email already exists. Sign in instead.'),

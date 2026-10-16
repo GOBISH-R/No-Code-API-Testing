@@ -3,6 +3,8 @@
 ApIForge is a website for testing APIs without writing code. You build a request, send it, and see the
 response, then check that the API works the way it should. All by clicking, not coding.
 
+**Live site: https://apiforge-m2ir.onrender.com**
+
 ## Features
 
 ### Sending requests
@@ -59,15 +61,9 @@ response, then check that the API works the way it should. All by clicking, not 
 - **Team workspaces**: share collections, environments and monitors with your team, inviting people as
   **Editors** (can change things) or **Viewers** (can look and run, but not change).
 
-## Run it on your computer
+## Try it
 
-You need Node.js 20 or newer.
+Open **https://apiforge-m2ir.onrender.com**, create an account, and start testing. Nothing to install.
 
-```bash
-npm run install:all
-cp server/.env.example server/.env
-cp client/.env.example client/.env
-npm run dev:local
-```
-
-Then open http://localhost:5173.
+The site runs on a free plan that sleeps when nobody is using it, so the first visit after a quiet
+spell can take up to a minute to load.

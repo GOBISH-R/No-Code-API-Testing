@@ -64,6 +64,3 @@ response, then check that the API works the way it should. All by clicking, not 
 ## Try it
 
 Open **https://apiforge-m2ir.onrender.com**, create an account, and start testing. Nothing to install.
-
-The site runs on a free plan that sleeps when nobody is using it, so the first visit after a quiet
-spell can take up to a minute to load.

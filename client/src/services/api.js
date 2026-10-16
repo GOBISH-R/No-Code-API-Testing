@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+// A production build is served by the API server itself (server/src/config/serveClient.js),
+// so by default it talks to the address it was loaded from. In development the site runs
+// on Vite's own port, beside the API on 5000. VITE_API_BASE_URL overrides either.
+const baseURL =
+  import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
 
 // The backend origin, e.g. for validating the origin of a postMessage sent by a popup
 // window it opened (see useOAuthAuthCode.js) — that popup is served from this origin.

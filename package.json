@@ -12,6 +12,7 @@
     "dev:server:local": "npm run dev:local --prefix server",
     "dev:client": "npm run dev --prefix client",
     "build": "npm run build --prefix client",
+    "build:deploy": "npm ci --prefix server --omit=dev && npm ci --prefix client --include=dev && npm run build --prefix client",
     "start": "npm start --prefix server",
     "test": "npm test --prefix server && npm test --prefix client",
     "lint": "npx oxlint client/src server/src",
@@ -19,5 +20,8 @@
   },
   "devDependencies": {
     "concurrently": "^10.0.5"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

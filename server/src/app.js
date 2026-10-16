@@ -26,13 +26,22 @@ import { workspaceScope } from './middleware/workspaceScope.js';
 import { apiLimiter, parseTrustProxy } from './middleware/rateLimits.js';
 import { notFound } from './middleware/notFound.js';
 import { errorHandler } from './middleware/errorHandler.js';
+import { serveClient } from './config/serveClient.js';
 
 const app = express();
 app.set('trust proxy', parseTrustProxy(process.env.TRUST_PROXY));
 
 const clientUrl = process.env.CLIENT_URL || 'http://localhost:5173';
 
-app.use(helmet());
+// Helmet's defaults, plus Google's image servers: an account that signs in with Google
+// shows its Google profile picture, which the default `img-src 'self'` would block.
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: { 'img-src': ["'self'", 'data:', 'https://*.googleusercontent.com'] },
+    },
+  }),
+);
 // Sending a request may carry up to 5 MB of files for a multipart body, base64-encoded;
 // everything else stays at 1 MB. Saved requests never hold file contents.
 const sendBodyParser = express.json({ limit: '8mb' });
@@ -103,6 +112,12 @@ app.use('/api/workspaces', workspacesRoutes);
 // management API's locked-down one.
 app.use('/mock', cors());
 app.use('/mock', mockServerRoutes);
+
+// Production: the same server hands out the built website, at the same address as the
+// API — see config/serveClient.js for why that matters.
+if (process.env.NODE_ENV === 'production' && !serveClient(app)) {
+  console.warn('[server] client/dist was not found, so the website is not being served. Run the client build.');
+}
 
 app.use(notFound);
 app.use(errorHandler);

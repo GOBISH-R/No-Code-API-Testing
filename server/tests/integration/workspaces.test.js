@@ -166,6 +166,15 @@ describe('invitations', () => {
     expect((await as(bob).post(`/api/workspaces/${ws}/invites`).send({ email: 'x@y.com', role: 'viewer' })).status).toBe(403);
   });
 
+  it('go only to people who already have an account', async () => {
+    const ws = await teamOf();
+    const res = await as(ada).post(`/api/workspaces/${ws}/invites`).send({ email: 'stranger@example.com', role: 'viewer' });
+    expect(res.status).toBe(400);
+    expect(res.body.message).toBe('No ApIForge account uses that email. Ask them to sign up first, then invite them.');
+    expect(sendWorkspaceInviteEmail).not.toHaveBeenCalled();
+    expect(await WorkspaceInvite.countDocuments()).toBe(0);
+  });
+
   it('expire', async () => {
     const ws = await teamOf();
     const invite = (await as(ada).post(`/api/workspaces/${ws}/invites`).send({ email: 'bob@example.com', role: 'viewer' })).body;
@@ -227,11 +236,11 @@ describe('roles', () => {
   it('shows pending invitations to the owner only', async () => {
     const ws = await teamOf();
     await join(ws, bob, 'editor');
-    await as(ada).post(`/api/workspaces/${ws}/invites`).send({ email: 'carol@example.com', role: 'viewer' });
+    await as(ada).post(`/api/workspaces/${ws}/invites`).send({ email: 'mallory@example.com', role: 'viewer' });
 
     const ownerView = (await as(ada).get(`/api/workspaces/${ws}/members`)).body;
     expect(ownerView.members.map((m) => [m.name, m.role])).toEqual([['Ada', 'owner'], ['Bob', 'editor']]);
-    expect(ownerView.invites.map((i) => i.email)).toEqual(['carol@example.com']);
+    expect(ownerView.invites.map((i) => i.email)).toEqual(['mallory@example.com']);
     expect((await as(bob).get(`/api/workspaces/${ws}/members`)).body.invites).toEqual([]);
   });
 });

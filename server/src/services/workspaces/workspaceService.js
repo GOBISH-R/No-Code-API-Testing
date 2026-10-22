@@ -174,9 +174,14 @@ export async function inviteMember(userId, workspaceId, { email, role }) {
     throw new ValidationError('Enter a valid email address.');
   }
 
-  // Already in? Compared by account, so a member is not invited a second time.
+  // Only people who already use ApIForge can be invited, so an invitation never goes
+  // to an address nobody signed up with. Already in? Compared by account, so a member
+  // is not invited a second time.
   const existing = await User.findOne({ email: address }).select('_id').lean();
-  if (existing && roleIn(workspace, existing._id)) {
+  if (!existing) {
+    throw new ValidationError('No ApIForge account uses that email. Ask them to sign up first, then invite them.');
+  }
+  if (roleIn(workspace, existing._id)) {
     throw new ValidationError('That person is already in this workspace.');
   }
   if (workspace.members.length >= MAX_MEMBERS) {

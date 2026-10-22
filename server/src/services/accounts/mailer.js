@@ -154,7 +154,7 @@ export async function sendWorkspaceInviteEmail({ to, inviterName, workspaceName,
   const link = `${appUrl()}/app`;
   const intro = `${inviterName} invited you to the workspace "${workspaceName}" on ${APP_NAME} as ${
     role === 'editor' ? 'an editor' : 'a viewer'
-  }. Sign in with this email address — or create an account with it — and accept the invitation under Workspaces.`;
+  }. Sign in with this email address and accept the invitation under Workspaces.`;
   const note = "The invitation is open for 7 days. If you weren't expecting it, you can ignore this email.";
 
   return deliver({

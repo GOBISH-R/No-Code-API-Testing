@@ -291,8 +291,8 @@ export default function WorkspacesModal({ workspacesState, onClose }) {
                       <button type="submit" className="modal__confirm" disabled={busy || !inviteEmail.trim()}>Invite</button>
                     </form>
                     <p className="ws-muted ws-help">
-                      {ROLE_HELP[inviteRole]} They accept by signing in to ApIForge with that address — an account can be
-                      created with it if they have none.
+                      {ROLE_HELP[inviteRole]} Only people with an ApIForge account can be invited; they accept after
+                      signing in.
                     </p>
 
                     {details?.invites?.length > 0 && (

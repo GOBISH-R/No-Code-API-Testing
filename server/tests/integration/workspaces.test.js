@@ -163,14 +163,16 @@ describe('invitations', () => {
     expect((await as(ada).post(`/api/workspaces/${ws}/invites`).send({ email: 'bob@example.com', role: 'editor' })).status).toBe(400);
     expect((await as(ada).post(`/api/workspaces/${ws}/invites`).send({ email: 'ada@example.com', role: 'editor' })).status).toBe(400);
     // Only the owner invites.
-    expect((await as(bob).post(`/api/workspaces/${ws}/invites`).send({ email: 'x@y.com', role: 'viewer' })).status).toBe(403);
+    const denied = await as(bob).post(`/api/workspaces/${ws}/invites`).send({ email: 'x@y.com', role: 'viewer' });
+    expect(denied.status).toBe(403);
+    expect(denied.body.message).toBe('Access denied.');
   });
 
   it('go only to people who already have an account', async () => {
     const ws = await teamOf();
     const res = await as(ada).post(`/api/workspaces/${ws}/invites`).send({ email: 'stranger@example.com', role: 'viewer' });
     expect(res.status).toBe(400);
-    expect(res.body.message).toBe('No ApIForge account uses that email. Ask them to sign up first, then invite them.');
+    expect(res.body.message).toBe('There is no user with this mail.');
     expect(sendWorkspaceInviteEmail).not.toHaveBeenCalled();
     expect(await WorkspaceInvite.countDocuments()).toBe(0);
   });

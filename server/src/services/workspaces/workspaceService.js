@@ -68,11 +68,11 @@ export async function membership(userId, workspaceId) {
   return role ? { workspace, role } : null;
 }
 
-async function requireRole(userId, workspaceId, allowed) {
+async function requireRole(userId, workspaceId, allowed, deniedMessage = 'Only the workspace owner can do that.') {
   const found = await membership(userId, workspaceId);
   if (!found) return null;
   if (!allowed.includes(found.role)) {
-    throw new ForbiddenError('Only the workspace owner can do that.');
+    throw new ForbiddenError(deniedMessage);
   }
   return found;
 }
@@ -164,7 +164,7 @@ export async function listMembers(userId, workspaceId) {
 }
 
 export async function inviteMember(userId, workspaceId, { email, role }) {
-  const found = await requireRole(userId, workspaceId, ['owner']);
+  const found = await requireRole(userId, workspaceId, ['owner'], 'Access denied.');
   if (!found) return null;
   const { workspace } = found;
   checkRole(role);
@@ -179,13 +179,13 @@ export async function inviteMember(userId, workspaceId, { email, role }) {
   // is not invited a second time.
   const existing = await User.findOne({ email: address }).select('_id').lean();
   if (!existing) {
-    throw new ValidationError('No ApIForge account uses that email. Ask them to sign up first, then invite them.');
+    throw new ValidationError('There is no user with this mail.');
   }
   if (roleIn(workspace, existing._id)) {
     throw new ValidationError('That person is already in this workspace.');
   }
   if (workspace.members.length >= MAX_MEMBERS) {
-    throw new ValidationError(`A workspace can have up to ${MAX_MEMBERS} members besides its owner.`);
+    throw new ValidationError('Maximum number of members reached.');
   }
   const pending = await WorkspaceInvite.countDocuments({ workspaceId: workspace._id, expiresAt: { $gt: new Date() } });
   const isRefresh = await WorkspaceInvite.exists({ workspaceId: workspace._id, email: address });

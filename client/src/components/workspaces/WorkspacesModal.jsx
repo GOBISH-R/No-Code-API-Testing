@@ -75,6 +75,9 @@ export default function WorkspacesModal({ workspacesState, onClose }) {
   };
 
   const select = (id) => {
+    // Re-selecting the open one must not blank its details: the load effect only runs
+    // when the selection changes, so nothing would fetch them again.
+    if (id === selectedId) return;
     setSelectedId(id);
     setDetails(null);
     setError(null);

@@ -1,5 +1,8 @@
-import dotenv from 'dotenv';
-dotenv.config();
+// First, as a side-effect import: imports are evaluated before any statement in this
+// file, so a dotenv.config() call here would run only after app.js had already read
+// SESSION_SECRET and friends — leaving the app and the WebSocket gateway on different
+// session secrets whenever they come from .env.
+import 'dotenv/config';
 
 import http from 'node:http';
 
